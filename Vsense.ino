@@ -23,12 +23,13 @@ bool buttonActive = false;
 bool longPressActive = false;
 bool brush1Active = false;
 
-int SOA = 800; //inter-stimulus onset asynchrony
-int motorCycle = 1000; //full time each motor will run
-int PWM = 153; //intensity of the motor vibration. Range: 0 --> 153 (pins go up to 255 but we only want to use 3V max in the transistor ==> 3V/5V*255 = 153)
+int SOA = 2000; //inter-stimulus onset asynchrony
+int motorCycle = 3000; //full time each motor will run
+int PWM = 255; //intensity of the motor vibration. Range: 0 --> 153 (pins go up to 255 but we only want to use 3V max in the transistor ==> 3V/5V*255 = 153)
 
 
 void setup() {
+  Serial.begin(9600);
   pinMode(motor00, OUTPUT);
   pinMode(motor01, OUTPUT);
   pinMode(motor10, OUTPUT);
@@ -41,13 +42,14 @@ void setup() {
   pinMode(motor41, OUTPUT);
   pinMode(motor50, OUTPUT);
   pinMode(motor51, OUTPUT);
-  pinMode(buttonPin, INPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
   pinMode(HRsensor, INPUT);
 }
 
 void loop() {
-
-  if (digitalRead(buttonPin) == HIGH) {
+  Serial.println(digitalRead(buttonPin));
+  if (digitalRead(buttonPin) == LOW) {
+    Serial.print("Starting program... ");
     if (buttonActive == false){
       buttonActive = true;
       buttonTimer = millis();  
@@ -56,20 +58,22 @@ void loop() {
     if ((millis() - buttonTimer > longClickTime) && (longPressActive == false)){
       longPressActive = true;
       //do long click event
+      Serial.println("longClickEvent");
       longClickEvent();
-    }
-  } else {
+    } else {
     if (buttonActive == true){
       if (longPressActive == true){
         longPressActive = false;
       } else {
         //do short click event
+        Serial.println("shortClickEvent");
         shortClickEvent();
       }
       buttonActive = false;
     }
   }
-
+}
+delay(100);
 }
 
 void longClickEvent() {
@@ -78,9 +82,9 @@ void longClickEvent() {
 
 void shortClickEvent() {
   //notification for the short click input
-  analogWrite(motor00, 153);  // run first line of motor at 60% duty cycle --> 3V
-  analogWrite(motor01, 153);
-  delay(500);                // play for 0.5s
+  analogWrite(motor00, PWM);  // run first line of motor at 60% duty cycle --> 3V
+  analogWrite(motor01, PWM);
+  delay(5000);                // play for 0.5s
   analogWrite(motor00, 0);  // shut first line of motor
   analogWrite(motor01, 0);
   delay(1000);             // wait for 1s
@@ -88,7 +92,8 @@ void shortClickEvent() {
   brush1();
   brush1Active = true;
   while (true) {
-    if (digitalRead(buttonPin) == HIGH){
+    Serial.println("HR sensor = " + HRsensor);
+    if (digitalRead(buttonPin) == LOW){
       if (brush1Active == true){
         brush1Active = false;
         brush2();
@@ -109,6 +114,7 @@ void shortClickEvent() {
 }
 
 void brush1() {
+  Serial.println("Starting Brush1");
   analogWrite(motor00, PWM);  // run first line of motor at PWM (range: 0 --> 153)
   analogWrite(motor01, PWM);
   delay(SOA);                // play for *SOA* before starting the next row
@@ -145,11 +151,12 @@ void brush1() {
   delay(motorCycle-SOA);
   analogWrite(motor10, 0);  // shut sixth line of motor
   analogWrite(motor11, 0);
-  
+  Serial.println("Finished Brush1");
   
 }
 
 void brush2() {
+  Serial.println("Starting Brush2");
   analogWrite(motor50, PWM);  // run the motor50 at PWM (range: 0 --> 153)
   delay(SOA);                 // play for *SOA* before starting the next row
   analogWrite(motor51, PWM);

@@ -25,7 +25,7 @@ bool brush1Active = false;
 
 int SOA = 2000; //inter-stimulus onset asynchrony
 int motorCycle = 3000; //full time each motor will run
-int PWM = 255; //intensity of the motor vibration. Range: 0 --> 153 (pins go up to 255 but we only want to use 3V max in the transistor ==> 3V/5V*255 = 153)
+int PWM = 153; //intensity of the motor vibration. Range: 0 --> 153 (pins go up to 255 but we only want to use 3V max in the transistor ==> 3V/5V*255 = 153)
 
 
 void setup() {
@@ -50,38 +50,48 @@ void loop() {
   Serial.println(digitalRead(buttonPin));
   if (digitalRead(buttonPin) == LOW) {
     Serial.print("Starting program... ");
-    if (buttonActive == false){
-      buttonActive = true;
-      buttonTimer = millis();  
-    }
-
-    if ((millis() - buttonTimer > longClickTime) && (longPressActive == false)){
-      longPressActive = true;
+    while(digitalRead(buttonPin) == LOW){
+      Serial.println("Entering the while loop for longClick...");
+      if(buttonActive == false){
+        Serial.println("Setting buttonTimer and buttonActive...");
+        buttonTimer = millis();
+        buttonActive = true;
+      }
+      Serial.println("I escaped the if statement for setting bTimer and bActive...");
+      if ((millis() - buttonTimer) > longClickTime){
       //do long click event
+      Serial.print("millis() = ");
+      Serial.println(millis());
+      Serial.print("buttonTimer = ");
+      Serial.println(buttonTimer);
       Serial.println("longClickEvent");
+      longPressActive = true;
+      buttonActive = false;
       longClickEvent();
+      }
+      Serial.println("I passed by the if statement for longClick...");
+      delay(100);
+    }
+    if (longPressActive == true){
+      Serial.println("Resetting buttonActive and longPressActive...");
+      buttonActive = false;
+      longPressActive = false;
     } else {
-    if (buttonActive == true){
-      if (longPressActive == true){
-        longPressActive = false;
-      } else {
+        Serial.println("Resetting buttonActive...");
+        buttonActive = false;
         //do short click event
         Serial.println("shortClickEvent");
         shortClickEvent();
-      }
-      buttonActive = false;
+        Serial.print("ShortClickEvent is finished. ButtonActive: ");
+        Serial.println(buttonActive);
     }
+    delay(100);
   }
-}
-delay(100);
+  delay(100);
 }
 
 void longClickEvent() {
-  
-}
-
-void shortClickEvent() {
-  //notification for the short click input
+ //notification for the long click input
   analogWrite(motor00, PWM);  // run first line of motor at 60% duty cycle --> 3V
   analogWrite(motor01, PWM);
   delay(5000);                // play for 0.5s
@@ -92,25 +102,38 @@ void shortClickEvent() {
   brush1();
   brush1Active = true;
   while (true) {
-    Serial.println("HR sensor = " + HRsensor);
+    Serial.println("HR sensor = ");
     if (digitalRead(buttonPin) == LOW){
       if (brush1Active == true){
         brush1Active = false;
         brush2();
       } else {
         brush1Active = true;
-        brush1();
       }
+      delay(100);
     }
-    while (digitalRead(HRsensor)>120){
-      if (brush1Active){
-        // change the parameters of the brush
-        // do the brush patter 1
-      } else {
-        
-      }
-    }
+//    while (digitalRead(HRsensor)>120){
+//      if (brush1Active){
+//        // change the parameters of the brush
+//        // do the brush patter 1
+//      } else {
+//        
+//      }
+//    }
+    delay(100);
   }
+}
+
+void shortClickEvent() {
+  //notification for the short click input
+  analogWrite(motor40, PWM);  // run first line of motor at 60% duty cycle --> 3V
+  analogWrite(motor41, PWM);
+  delay(5000);                // play for 0.5s
+  analogWrite(motor40, 0);  // shut first line of motor
+  analogWrite(motor41, 0);
+  delay(1000);             // wait for 1s
+
+  brush2();
 }
 
 void brush1() {
@@ -156,23 +179,56 @@ void brush1() {
 }
 
 void brush2() {
-  Serial.println("Starting Brush2");
-  analogWrite(motor50, PWM);  // run the motor50 at PWM (range: 0 --> 153)
-  delay(SOA);                 // play for *SOA* before starting the next row
-  analogWrite(motor51, PWM);
-  delay(motorCycle-SOA);
-  analogWrite(motor50, 0);
-  delay(2*SOA-motorCycle);
-  analogWrite(motor41, PWM);
-  delay(motorCycle-SOA);
-  analogWrite(motor51, 0);
-  delay(motorCycle-SOA);
-  analogWrite(motor50, 0);
-  delay(2*SOA-motorCycle);
-  analogWrite(motor41, PWM);
-  delay(motorCycle-SOA);
-  analogWrite(motor50, 0);
-
-  
+  delay(1000);
+//  Serial.println("Starting Brush2");
+//  analogWrite(motor51, PWM);  // run the motor50 at PWM (range: 0 --> 153)
+//  delay(SOA);                 // play for *SOA* before starting the next row
+//  analogWrite(motor50, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor51, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor40, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor50, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor41, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor40, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor31, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor41, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor30, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor31, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor20, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor30, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor21, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor20, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor11, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor21, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor10, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor11, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor00, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor11, 0);
+//  delay(2*SOA-motorCycle);
+//  analogWrite(motor01, PWM);
+//  delay(motorCycle-SOA);
+//  analogWrite(motor00, 0);
+//  delay(SOA);
+//  analogWrite(motor01, 0);
+//
+//  Serial.println("Finished Brush2");
 }
 

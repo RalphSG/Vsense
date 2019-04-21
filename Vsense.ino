@@ -14,7 +14,8 @@ const int motor51 = 45;
 
 const int buttonPin = 22;
 
-const int HRsensor = 46;
+//const int HRsensor = 46;
+const int buttonSensorSim = 52;
 
 // variables
 int buttonTimer = 0; //ms timer: will store the value of millis() to check for pressing time
@@ -43,7 +44,8 @@ void setup() {
   pinMode(motor50, OUTPUT);
   pinMode(motor51, OUTPUT);
   pinMode(buttonPin, INPUT_PULLUP);
-  pinMode(HRsensor, INPUT);
+  //pinMode(HRsensor, INPUT);
+  pinMode(buttonSensorSim, INPUT_PULLUP);
 }
 
 void loop() {
@@ -102,15 +104,25 @@ void longClickEvent() {
   brush1();
   brush1Active = true;
   while (true) {
-    Serial.println("HR sensor = ");
+    Serial.println("Waiting for sensor...");
     if (digitalRead(buttonPin) == LOW){
       if (brush1Active == true){
         brush1Active = false;
         brush2();
       } else {
         brush1Active = true;
+        brush1();
       }
       delay(100);
+    }
+
+    if (digitalRead(buttonSensorSim) == LOW){
+      Serial.println("Entered the sensor simulation...");
+      if (brush1Active == true){
+        brush1();
+      } else {
+        brush2();
+      }
     }
 //    while (digitalRead(HRsensor)>120){
 //      if (brush1Active){
@@ -179,56 +191,55 @@ void brush1() {
 }
 
 void brush2() {
-  delay(1000);
-//  Serial.println("Starting Brush2");
-//  analogWrite(motor51, PWM);  // run the motor50 at PWM (range: 0 --> 153)
-//  delay(SOA);                 // play for *SOA* before starting the next row
-//  analogWrite(motor50, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor51, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor40, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor50, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor41, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor40, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor31, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor41, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor30, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor31, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor20, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor30, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor21, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor20, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor11, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor21, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor10, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor11, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor00, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor11, 0);
-//  delay(2*SOA-motorCycle);
-//  analogWrite(motor01, PWM);
-//  delay(motorCycle-SOA);
-//  analogWrite(motor00, 0);
-//  delay(SOA);
-//  analogWrite(motor01, 0);
-//
-//  Serial.println("Finished Brush2");
+  Serial.println("Starting Brush2");
+  analogWrite(motor51, PWM);  // run the motor50 at PWM (range: 0 --> 153)
+  delay(SOA);                 // play for *SOA* before starting the next row
+  analogWrite(motor50, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor51, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor40, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor50, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor41, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor40, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor31, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor41, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor30, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor31, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor20, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor30, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor21, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor20, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor11, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor21, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor10, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor11, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor00, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor11, 0);
+  delay(2*SOA-motorCycle);
+  analogWrite(motor01, PWM);
+  delay(motorCycle-SOA);
+  analogWrite(motor00, 0);
+  delay(SOA);
+  analogWrite(motor01, 0);
+
+  Serial.println("Finished Brush2");
 }
 

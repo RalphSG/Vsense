@@ -26,7 +26,7 @@ bool brush1Active = false;
 
 int SOA = 2000; //inter-stimulus onset asynchrony
 int motorCycle = 3000; //full time each motor will run
-int PWM = 153; //intensity of the motor vibration. Range: 0 --> 153 (pins go up to 255 but we only want to use 3V max in the transistor ==> 3V/5V*255 = 153)
+int PWM = 255; //intensity of the motor vibration. Range: 0 --> 153 (pins go up to 255 but we only want to use 3V max in the transistor ==> 3V/5V*255 = 153)
 
 
 void setup() {

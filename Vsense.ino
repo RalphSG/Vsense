@@ -12,14 +12,14 @@ const int motor41 = 12;
 const int motor50 = 44;
 const int motor51 = 45;
 
-const int buttonPin = 22;
+const int buttonPin = 48;
 
 //const int HRsensor = 46;
 const int buttonSensorSim = 52;
 
 // variables
 int buttonTimer = 0; //ms timer: will store the value of millis() to check for pressing time
-int longClickTime = 1000; //ms period: how long to wait for the long click event to trigger
+int longClickTime = 3000; //ms period: how long to wait for the long click event to trigger
 bool buttonActive = false;
 bool longPressActive = false;
 bool brush1Active = false;
@@ -138,14 +138,14 @@ void longClickEvent() {
 
 void shortClickEvent() {
   //notification for the short click input
-  analogWrite(motor40, PWM);  // run first line of motor at 60% duty cycle --> 3V
-  analogWrite(motor41, PWM);
-  delay(5000);                // play for 0.5s
-  analogWrite(motor40, 0);  // shut first line of motor
-  analogWrite(motor41, 0);
+  analogWrite(motor50, PWM);  // run first line of motor at 60% duty cycle --> 3V  
+  analogWrite(motor51, PWM);
+  delay(1000);                // play for 0.5s
+  analogWrite(motor50, 0);  // shut first line of motor
+  analogWrite(motor51, 0);
   delay(1000);             // wait for 1s
 
-  brush2();
+  brush1();
 }
 
 void brush1() {
@@ -165,27 +165,27 @@ void brush1() {
   analogWrite(motor10, 0);  // shut second line of motor
   analogWrite(motor11, 0);
   delay(2*SOA-motorCycle);
-  analogWrite(motor20, PWM);  // run fourth line of motor at PWM (range: 0 --> 153)
-  analogWrite(motor21, PWM);
+  analogWrite(motor30, PWM);  // run fourth line of motor at PWM (range: 0 --> 153)
+  analogWrite(motor31, PWM);
   delay(motorCycle-SOA);
-  analogWrite(motor10, 0);  // shut third line of motor
-  analogWrite(motor11, 0);
+  analogWrite(motor20, 0);  // shut third line of motor
+  analogWrite(motor21, 0);
   delay(2*SOA-motorCycle);
-  analogWrite(motor20, PWM);  // run fifth line of motor at PWM (range: 0 --> 153)
-  analogWrite(motor21, PWM);
+  analogWrite(motor40, PWM);  // run fifth line of motor at PWM (range: 0 --> 153)
+  analogWrite(motor41, PWM);
   delay(motorCycle-SOA);
-  analogWrite(motor10, 0);  // shut fourth line of motor
-  analogWrite(motor11, 0);
+  analogWrite(motor30, 0);  // shut fourth line of motor
+  analogWrite(motor31, 0);
   delay(2*SOA-motorCycle);
-  analogWrite(motor20, PWM);  // run sixth line of motor at PWM (range: 0 --> 153)
-  analogWrite(motor21, PWM);
+  analogWrite(motor50, PWM);  // run sixth line of motor at PWM (range: 0 --> 153)
+  analogWrite(motor51, PWM);
   delay(motorCycle-SOA);
-  analogWrite(motor10, 0);  // shut fifth line of motor
-  analogWrite(motor11, 0);
+  analogWrite(motor40, 0);  // shut fifth line of motor
+  analogWrite(motor41, 0);
   delay(2*SOA-motorCycle);
   delay(motorCycle-SOA);
-  analogWrite(motor10, 0);  // shut sixth line of motor
-  analogWrite(motor11, 0);
+  analogWrite(motor50, 0);  // shut sixth line of motor
+  analogWrite(motor51, 0);
   Serial.println("Finished Brush1");
   
 }
@@ -193,53 +193,76 @@ void brush1() {
 void brush2() {
   Serial.println("Starting Brush2");
   analogWrite(motor51, PWM);  // run the motor50 at PWM (range: 0 --> 153)
+  Serial.println("motor12 start");
   delay(SOA);                 // play for *SOA* before starting the next row
   analogWrite(motor50, PWM);
+  Serial.println("motor11 start");
   delay(motorCycle-SOA);
   analogWrite(motor51, 0);
+  Serial.println("motor12 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor40, PWM);
+  Serial.println("motor9 start");
   delay(motorCycle-SOA);
   analogWrite(motor50, 0);
+  Serial.println("motor11 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor41, PWM);
+  Serial.println("motor10 start");
   delay(motorCycle-SOA);
   analogWrite(motor40, 0);
+  Serial.println("motor9 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor31, PWM);
+  Serial.println("motor8 start");
   delay(motorCycle-SOA);
   analogWrite(motor41, 0);
+  Serial.println("motor10 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor30, PWM);
+  Serial.println("motor7 start");
   delay(motorCycle-SOA);
   analogWrite(motor31, 0);
+  Serial.println("motor8 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor20, PWM);
+  Serial.println("motor5 start");
   delay(motorCycle-SOA);
   analogWrite(motor30, 0);
+  Serial.println("motor7 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor21, PWM);
+  Serial.println("motor6 start");
   delay(motorCycle-SOA);
   analogWrite(motor20, 0);
+  Serial.println("motor5 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor11, PWM);
+  Serial.println("motor4 start");
   delay(motorCycle-SOA);
   analogWrite(motor21, 0);
+  Serial.println("motor6 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor10, PWM);
+  Serial.println("motor3 start");
   delay(motorCycle-SOA);
   analogWrite(motor11, 0);
+  Serial.println("motor4 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor00, PWM);
+  Serial.println("motor1 start");
   delay(motorCycle-SOA);
   analogWrite(motor11, 0);
+  Serial.println("motor4 stop");
   delay(2*SOA-motorCycle);
   analogWrite(motor01, PWM);
+  Serial.println("motor2 start");
   delay(motorCycle-SOA);
   analogWrite(motor00, 0);
+  Serial.println("motor1 stop");
   delay(SOA);
   analogWrite(motor01, 0);
-
+  Serial.println("motor2 stop");
   Serial.println("Finished Brush2");
 }
 

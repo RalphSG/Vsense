@@ -18,15 +18,16 @@ const int buttonPin = 48;
 const int buttonSensorSim = 52;
 
 // variables
-int buttonTimer = 0; //ms timer: will store the value of millis() to check for pressing time
-int longClickTime = 3000; //ms period: how long to wait for the long click event to trigger
-bool buttonActive = false;
+unsigned long timerDiff = 0;
+unsigned long buttonTimer = 0; //ms timer: will store the value of millis() to check for pressing time
+unsigned long longClickTime = 1000; //ms period: how long to wait for the long click event to trigger
+bool buttonActive;
 bool longPressActive = false;
 bool brush1Active = false;
 
 int SOA = 2000; //inter-stimulus onset asynchrony
 int motorCycle = 3000; //full time each motor will run
-int PWM = 255; //intensity of the motor vibration. Range: 0 --> 153 (pins go up to 255 but we only want to use 3V max in the transistor ==> 3V/5V*255 = 153)
+int PWM = 150; //intensity of the motor vibration. Range: 0 --> 255 (motors need at least 60 to start)
 
 
 void setup() {
@@ -46,21 +47,25 @@ void setup() {
   pinMode(buttonPin, INPUT_PULLUP);
   //pinMode(HRsensor, INPUT);
   pinMode(buttonSensorSim, INPUT_PULLUP);
+  
+  buttonActive = false;
 }
 
 void loop() {
   Serial.println(digitalRead(buttonPin));
+  
   if (digitalRead(buttonPin) == LOW) {
     Serial.print("Starting program... ");
     while(digitalRead(buttonPin) == LOW){
-      Serial.println("Entering the while loop for longClick...");
+      Serial.println("Entering the while loop for checking longClick...");
       if(buttonActive == false){
         Serial.println("Setting buttonTimer and buttonActive...");
         buttonTimer = millis();
         buttonActive = true;
       }
       Serial.println("I escaped the if statement for setting bTimer and bActive...");
-      if ((millis() - buttonTimer) > longClickTime){
+      timerDiff = millis() - buttonTimer;
+      if (timerDiff > longClickTime){
       //do long click event
       Serial.print("millis() = ");
       Serial.println(millis());

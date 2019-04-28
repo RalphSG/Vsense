@@ -1,16 +1,16 @@
 // constants / pin numbers
 const int motor00 = 2;
-const int motor01 = 3;
-const int motor10 = 4;
-const int motor11 = 5;
-const int motor20 = 6;
-const int motor21 = 7;
-const int motor30 = 8;
-const int motor31 = 9;
-const int motor40 = 11;
+const int motor01 = 45;
+const int motor10 = 3;
+const int motor11 = 44;
+const int motor20 = 4;
+const int motor21 = 9;
+const int motor30 = 5;
+const int motor31 = 11;
+const int motor40 = 6;
 const int motor41 = 12;
-const int motor50 = 44;
-const int motor51 = 45;
+const int motor50 = 8;
+const int motor51 = 13;
 
 const int buttonPin = 48;
 

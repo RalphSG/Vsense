@@ -24,6 +24,8 @@ unsigned long longClickTime = 1000; //ms period: how long to wait for the long c
 bool buttonActive;
 bool longPressActive = false;
 bool brush1Active = false;
+bool brush2Active = false;
+bool brush3Active = false;
 bool longClickMode = false;
 
 int SOA = 95; //inter-stimulus onset asynchrony
@@ -117,7 +119,17 @@ void longClickEvent() {
     if (digitalRead(buttonPin) == LOW){
       if (brush1Active == true){
         brush1Active = false;
+        brush2Active = true;
         brush2();
+        stopMotors();
+      } else if (brush2Active == true){
+        brush2Active = false;
+        brush3Active = true;
+        brush3();
+        stopMotors();
+      } else if (brush3Active == true){
+        brush3Active = false;
+        brush4();
         stopMotors();
       } else {
         brush1Active = true;
@@ -132,9 +144,14 @@ void longClickEvent() {
       longClickMode = false;
       if (brush1Active == true){
         brush1();
-      } else {
+      } else if (brush2Active == true){
         brush2();
+      } else if (brush3Active == true){
+        brush3();
+      } else {
+        brush4();
       }
+      stopMotors();
       longClickMode = true;
     }
 //    while (digitalRead(HRsensor)>120){
@@ -151,16 +168,14 @@ void longClickEvent() {
 
 void shortClickEvent() {
   //notification for the short click input
-  analogWrite(motor50, PWM);  // run first line of motor at 60% duty cycle --> 3V  
-  analogWrite(motor51, PWM);
-  delay(1000);                // play for 0.5s
+  analogWrite(motor50, 90);  // run first line of motor at 60% duty cycle --> 3V  
+  analogWrite(motor51, 90);
+  delay(3000);                // play for 0.5s
   analogWrite(motor50, 0);  // shut first line of motor
   analogWrite(motor51, 0);
   delay(1000);             // wait for 1s
 
-  
-  brush1();
-  
+  //brush1();
   stopMotors();
   
   delay(1000);
@@ -357,6 +372,168 @@ void brush2() {
     delay(2*SOA-motorCycle);
   }while(longClickMode==false);
   Serial.println("Finished Brush2");
+}
+
+void brush3(){
+  Serial.println("Starting Brush3");
+ analogWrite(motor00, PWM);
+ delay(SOA);
+ do {
+   analogWrite(motor10, PWM);
+   delay(motorCycle-SOA);
+   analogWrite(motor00, 0);
+   delay(2*SOA-motorCycle);
+   analogWrite(motor20, PWM);
+   delay(motorCycle-SOA);
+   if (digitalRead(buttonPin)==LOW)
+     break;
+   analogWrite(motor10, 0);
+   delay(2*SOA-motorCycle);
+   analogWrite(motor30, PWM);
+   delay(motorCycle-SOA);
+   analogWrite(motor20, 0);
+   delay(2*SOA-motorCycle);
+   if (digitalRead(buttonPin)==LOW)
+     break;
+   analogWrite(motor40, PWM);
+   delay(motorCycle-SOA);
+   analogWrite(motor30, 0);
+   delay(2*SOA-motorCycle);
+   analogWrite(motor50, PWM);
+   delay(motorCycle-SOA);
+   if (digitalRead(buttonPin)==LOW)
+     break;
+   analogWrite(motor40, 0);
+   delay(2*SOA-motorCycle);
+   analogWrite(motor51, PWM);
+   delay(motorCycle-SOA);
+   analogWrite(motor50, 0);
+   delay(2*SOA-motorCycle);
+   if (digitalRead(buttonPin)==LOW)
+     break;
+   analogWrite(motor41, PWM);
+   delay(motorCycle-SOA);
+   analogWrite(motor51, 0);
+   delay(2*SOA-motorCycle);
+   analogWrite(motor31, PWM);
+   delay(motorCycle-SOA);
+   if (digitalRead(buttonPin)==LOW)
+     break;
+   analogWrite(motor41, 0);
+   delay(2*SOA-motorCycle);
+   analogWrite(motor21, PWM);
+   delay(motorCycle-SOA);
+   analogWrite(motor31, 0);
+   delay(2*SOA-motorCycle);
+   if (digitalRead(buttonPin)==LOW)
+     break;
+   analogWrite(motor11, PWM);
+   delay(motorCycle-SOA);
+   analogWrite(motor21, 0);
+   delay(2*SOA-motorCycle);
+   analogWrite(motor01, PWM);
+   delay(motorCycle-SOA);
+   if (digitalRead(buttonPin)==LOW)
+     break;
+   analogWrite(motor11, 0);
+   delay(2*SOA-motorCycle);
+   analogWrite(motor00, PWM);
+   delay(motorCycle-SOA);
+   analogWrite(motor01, 0);
+   delay(2*SOA-motorCycle);
+   if (digitalRead(buttonPin)==LOW)
+     break;
+ }while(longClickMode==false);
+ Serial.println("Finished Brush3");
+}
+
+void brush4(){
+  Serial.println("Starting Brush4");
+  analogWrite(motor00, PWM);
+  delay(SOA);
+  do {
+    analogWrite(motor10, 165); // 204 was the corresponding number but since the other is not strong enough this had to be tempered
+    analogWrite(motor11, 90); // 51 was the correct number to get a perfect hourlass shape with phantom actuators but the motor only start around 85
+    delay(motorCycle-SOA);
+    analogWrite(motor00, 0);
+    delay(2*SOA-motorCycle);
+    analogWrite(motor20, 137); // putting this one more in the middle to get a contrast with the previous one (correct number: 153)
+    analogWrite(motor21, 117); // correct number: 102
+    delay(motorCycle-SOA);
+    if (digitalRead(buttonPin)==LOW)
+     break;
+    analogWrite(motor10, 0);
+    analogWrite(motor11, 0);
+    delay(2*SOA-motorCycle);
+    analogWrite(motor30, 117);
+    analogWrite(motor31, 137);
+    delay(motorCycle-SOA);
+    analogWrite(motor20, 0);
+    analogWrite(motor21, 0);
+    delay(2*SOA-motorCycle);
+    if (digitalRead(buttonPin)==LOW)
+     break;
+    analogWrite(motor40, 90);
+    analogWrite(motor41, 165);
+    delay(motorCycle-SOA);
+    analogWrite(motor30, 0);
+    analogWrite(motor31, 0);
+    delay(2*SOA-motorCycle);
+    analogWrite(motor51, PWM);
+    delay(motorCycle-SOA);
+    if (digitalRead(buttonPin)==LOW)
+     break;
+    analogWrite(motor40, 0);
+    analogWrite(motor41, 0);
+    delay(2*SOA-motorCycle);
+    analogWrite(motor50, PWM);
+    delay(motorCycle-SOA);
+    analogWrite(motor51, 0);
+    delay(2*SOA-motorCycle);
+    if (digitalRead(buttonPin)==LOW)
+     break;
+    analogWrite(motor40, 165);
+    analogWrite(motor41, 90);
+    delay(motorCycle-SOA);
+    analogWrite(motor50, 0);
+    delay(2*SOA-motorCycle);
+    analogWrite(motor30, 137);
+    analogWrite(motor31, 117);
+    delay(motorCycle-SOA);
+    if (digitalRead(buttonPin)==LOW)
+     break;
+    analogWrite(motor40, 0);
+    analogWrite(motor41, 0);
+    delay(2*SOA-motorCycle);
+    analogWrite(motor20, 117);
+    analogWrite(motor21, 137);
+    delay(motorCycle-SOA);
+    analogWrite(motor30, 0);
+    analogWrite(motor31, 0);
+    delay(2*SOA-motorCycle);
+    if (digitalRead(buttonPin)==LOW)
+     break;
+    analogWrite(motor10, 90);
+    analogWrite(motor11, 165);
+    delay(motorCycle-SOA);
+    analogWrite(motor20, 0);
+    analogWrite(motor21, 0);
+    delay(2*SOA-motorCycle);
+    analogWrite(motor01, PWM);
+    delay(motorCycle-SOA);
+    if (digitalRead(buttonPin)==LOW)
+     break;
+    analogWrite(motor10, 0);
+    analogWrite(motor11, 0);
+    delay(2*SOA-motorCycle);
+    analogWrite(motor00, PWM);
+    delay(motorCycle-SOA);
+    analogWrite(motor01, 0);
+    delay(2*SOA-motorCycle);
+    if (digitalRead(buttonPin)==LOW)
+     break;
+  }while(longClickMode == false);
+  Serial.println("Finished Brush4");
 }
 
 void stopMotors() {

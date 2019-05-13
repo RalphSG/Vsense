@@ -105,7 +105,7 @@ void longClickEvent() {
  //notification for the long click input
   analogWrite(motor00, PWM);  // run first line of motor at 60% duty cycle --> 3V
   analogWrite(motor01, PWM);
-  delay(5000);                // play for 0.5s
+  delay(1000);                // play for 0.5s
   analogWrite(motor00, 0);  // shut first line of motor
   analogWrite(motor01, 0);
   delay(1000);             // wait for 1s
@@ -152,6 +152,7 @@ void longClickEvent() {
         brush4();
       }
       stopMotors();
+      delay(500);
       longClickMode = true;
     }
 //    while (digitalRead(HRsensor)>120){
